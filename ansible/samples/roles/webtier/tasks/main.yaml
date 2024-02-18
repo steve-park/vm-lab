@@ -1,0 +1,36 @@
+---
+- name: ensure apache is at the latest version
+  yum:
+    name: "{{ http_service }}"
+    state: latest
+  when:
+    - ansible_facts['distribution'] == "CentOS"
+    - ansible_facts['distribution_major_version'] == "7"
+  tags: 
+    - install
+
+- name: write welcome page
+  template:
+    src: welcome.html.j2
+    dest: /var/www/html/index.html
+    owner: "{{ http_user }}"
+    group: "{{ http_group }}"
+    mode: 0644
+  notify: 
+    - restart apache
+  tags: 
+    - install
+    
+- name: ensure apache is running
+  service:
+    name: "{{ http_service }}"
+    state: started
+
+- name: remove apache httpd
+  yum:
+    name: "{{ http_service }}"
+    state: absent
+  when:
+    - ansible_facts['distribution'] == "CentOS"
+  tags: 
+    - uninstall

@@ -1,0 +1,37 @@
+---
+- name: Installing nginx
+  hosts: labservers
+  become: true
+  vars:
+    nginx_package: nginx
+    nginx_service: nginx
+    nginx_nobody_user: www-data
+    nginx_nobody_group: www-data
+  tasks:
+    - name: install nginx package
+      apt:
+        name: "{{ nginx_package }}"
+        state: latest
+        update_cache: true
+      notify: 
+        - start_nginx
+    - name: update welcome.html file
+      template:
+        src: welcome.html.j2
+        dest: /var/www/html/index.html
+        owner: "{{ nginx_nobody_user }}"
+        group: "{{ nginx_nobody_group }}"
+        mode: 0644
+      notify: 
+        - retart_nginx
+      tags: 
+        - nginx_config
+  handlers:
+    - name: start_nginx
+      service:
+        name: "{{ nginx_service }}"
+        state: started
+    - name: retart_nginx
+      service:
+        name: "{{ nginx_service }}"
+        state: restarted

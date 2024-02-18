@@ -1,0 +1,10 @@
+---
+- hosts: labservers
+  vars:
+    http_service: httpd
+  become: true
+  tasks:
+    - name: remove apache httpd
+      yum:
+        name: "{{ http_service }}"
+        state: absent

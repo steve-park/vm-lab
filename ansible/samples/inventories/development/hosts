@@ -1,0 +1,9 @@
+[all:vars]
+ansible_ports=22
+
+[webservers]
+192.168.56.101
+192.168.56.102
+
+[dbservers]
+192.168.56.102

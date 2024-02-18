@@ -1,0 +1,22 @@
+- name: Install nginx on Linux
+  hosts: labservers
+  gather_facts: false
+  become: true
+  tasks:
+    - name: install epel-release
+      yum: 
+        name: epel-release
+        state: latest
+      # ansible labservers -m yum -a "name=epel-release state=latest"
+    - name: install nginx web server
+      yum: name=nginx state=present
+      # ansible labservers -m yum -a "name=nginx state=present"
+    - name: upload default index.html for web server
+      get_url: url=https://www.nginx.com dest=/usr/share/nginx/html/ mode=0644
+      # curl https://www.nginx.com -o index.html
+      # ansible labservers -m copy -a "src=index.html dest=/usr/share/nginx/html/index.html"
+    - name: start nginx web server
+      service: name=nginx state=started enabled=yes
+      # ansible labservers -m service -a "name=nginx state=started"
+    - name: open the http port
+      firewalld: service=http zone=public permanent=yes immediate=yes state=enabled

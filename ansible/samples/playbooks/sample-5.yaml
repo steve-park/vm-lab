@@ -1,0 +1,18 @@
+---
+- name: async demo
+  hosts: labservers
+  tasks:
+    - name: Long Task
+      shell:
+        cmd: sleep 100
+      async: 100
+      poll: 0
+      register: sleep_register
+
+    - name: Check Sync Status
+      async_status:
+        jid: "{{ sleep_register.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 20
+      delay: 10

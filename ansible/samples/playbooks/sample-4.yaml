@@ -1,0 +1,8 @@
+---
+- hosts: labservers
+  tasks:
+    - name: sleep 15
+      shell:
+        cmd: sleep 15
+      async: 45
+      poll: 0

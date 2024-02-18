@@ -1,0 +1,6 @@
+---
+- name: installing apache web server
+  become: true
+  hosts: webservers
+  roles:
+  - role: webtier

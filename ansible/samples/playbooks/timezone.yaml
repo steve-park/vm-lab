@@ -1,0 +1,16 @@
+- name: Set Server Timezone
+  hosts: labservers
+  gather_facts: false
+  become: true
+  tasks:
+    - name: set timezone to Asia/Seoul
+      timezone:
+        name: Asia/Seoul
+- name: Set Bastion Timezone
+  hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - name: set timezone to Asia/Seoul
+      timezone:
+        name: Asia/Seoul

@@ -1,0 +1,6 @@
+---
+http_service: httpd
+http_port: 80
+http_user: apache
+http_group: apache
+max_client: 200
