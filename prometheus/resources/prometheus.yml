@@ -24,15 +24,34 @@ rule_files:
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: "prometheus"
-
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
-
     static_configs:
       - targets: ["localhost:9090"]
-      - targets: ["192.168.56.11:8080"]
+  - job_name: "vm"
+    static_configs:
+      - targets: ["192.168.56.11:9100"]
         labels:
-          group: "web_application_serves"
-      - targets: ["192.168.56.12:8080"]
+          group: "web_application_servers"
+      - targets: ["192.168.56.12:9100"]
         labels:
-          group: "web_application_serves"
+          group: "web_application_servers"
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx_example]
+    static_configs:
+      - targets:
+        - http://www.itpanther.com
+        - http://www.google.com
+        - http://youtube.com
+        - http://itpanther.com
+        - http://techbuzzguide.com
+        - http://instagram.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:9115

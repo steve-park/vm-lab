@@ -14,3 +14,7 @@ sed -i 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 # disable firewall
 systemctl stop firewalld
 systemctl disable firewalld
+
+# fix centos mirrorlist temporary
+sed -i -e "s|mirrorlist=|#mirrorlist=|g" /etc/yum.repos.d/CentOS-* 2> /dev/null
+sed -i -e "s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g" /etc/yum.repos.d/CentOS-* 2> /dev/null
